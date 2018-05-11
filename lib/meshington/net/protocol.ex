@@ -6,6 +6,11 @@ defmodule Meshington.Net.Protocol do
 
   require Logger
 
+  # State
+  defstruct socket: nil,
+            transport: nil,
+            peer_name: ""
+
   # Client
 
   @doc """
@@ -34,10 +39,10 @@ defmodule Meshington.Net.Protocol do
     :ok = :ranch.accept_ack(ref)
     :ok = transport.setopts(socket, [{:active, true}])
 
-    :gen_server.enter_loop(__MODULE__, [], %{
+    :gen_server.enter_loop(__MODULE__, [], %__MODULE__{
       socket: socket,
       transport: transport,
-      peername: peername
+      peer_name: peername
     })
   end
 
@@ -45,7 +50,7 @@ defmodule Meshington.Net.Protocol do
 
   def handle_info(
         {:tcp, _, message},
-        %{socket: socket, transport: transport, peername: peername} = state
+        %__MODULE__{socket: socket, transport: transport, peer_name: peername} = state
       ) do
     Logger.debug(fn ->
       "Received new message from peer #{peername}: #{inspect(message)}. Echoing it back"
@@ -57,7 +62,7 @@ defmodule Meshington.Net.Protocol do
     {:noreply, state}
   end
 
-  def handle_info({:tcp_closed, _}, %{peername: peername} = state) do
+  def handle_info({:tcp_closed, _}, %__MODULE__{peer_name: peername} = state) do
     Logger.info(fn ->
       "Peer #{peername} disconnected"
     end)
@@ -65,7 +70,7 @@ defmodule Meshington.Net.Protocol do
     {:stop, :normal, state}
   end
 
-  def handle_info({:tcp_error, _, reason}, %{peername: peername} = state) do
+  def handle_info({:tcp_error, _, reason}, %__MODULE__{peer_name: peername} = state) do
     Logger.error(fn -> "Error with peer #{peername}: #{inspect(reason)}" end)
 
     {:stop, :normal, state}

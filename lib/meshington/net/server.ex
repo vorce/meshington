@@ -22,7 +22,7 @@ defmodule Meshington.Net.Server do
   Initiates the listener (pool of acceptors).
   """
   def init([port: port] = opts) do
-    {:ok, pid} = :ranch.start_listener(__MODULE__, 10, :ranch_tcp, opts, Protocol, [])
+    {:ok, pid} = :ranch.start_listener(__MODULE__, 10, :ranch_tcp, opts, Protocol, []) # ranch_ssl
 
     Logger.info(fn -> "Listening for connections on port #{port}" end)
 
