@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  meshington-postgres:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=meshington
+      - POSTGRES_PASSWORD=meshington
+      - POSTGRES_DB=meshington
