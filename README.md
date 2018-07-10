@@ -1,3 +1,5 @@
+**This project is still in the idea phase. It has no functionality yet :)**
+
 # Meshington
 
 Meshington is a self-hosted, distributed password manager that
