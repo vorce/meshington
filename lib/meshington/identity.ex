@@ -2,7 +2,8 @@ defmodule Meshington.Identity do
   @moduledoc """
   Identifies a meshington client/node.
   """
-  defstruct name: "", uuid: ""
+  defstruct name: "",
+            uuid: ""
 
   def new(name) do
     %__MODULE__{
@@ -14,7 +15,11 @@ defmodule Meshington.Identity do
   def mac_address() do
     with {:ok, addrs} <- :inet.getifaddrs() do
       addrs
-      |> Enum.filter(fn {name, _} -> name == 'en0' end)
+      |> Enum.filter(fn {name, _} ->
+        name == 'en0'
+      end)
+      |> List.first()
+      |> elem(1)
       |> Keyword.get(:hwaddr, [])
       |> Enum.join()
     end

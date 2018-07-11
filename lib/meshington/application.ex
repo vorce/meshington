@@ -7,11 +7,11 @@ defmodule Meshington.Application do
     children = [
       # Start the Ecto repository
       supervisor(Meshington.Repo, []),
+
+      worker(Meshington.Database, []),
+
       # Start the endpoint when the application starts
       supervisor(MeshingtonWeb.Endpoint, []),
-
-      # Start your own worker by calling: Meshington.Worker.start_link(arg1, arg2, arg3)
-      # worker(Meshington.Worker, [arg1, arg2, arg3]),
 
       # Start accepting peer connections
       supervisor(Meshington.Net.Supervisor, [])

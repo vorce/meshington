@@ -20,7 +20,7 @@ config :meshington, MeshingtonWeb.Endpoint,
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id, :module]
 
 config :meshington, Meshington.Net.Server,
   port: String.to_integer(System.get_env("PORT") || "3511")

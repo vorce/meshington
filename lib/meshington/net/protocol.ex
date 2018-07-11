@@ -48,19 +48,38 @@ defmodule Meshington.Net.Protocol do
 
   # Server callbacks
 
-  def handle_info(
-        {:tcp, _, message},
-        %__MODULE__{socket: socket, transport: transport, peer_name: peername} = state
-      ) do
+  def handle_info({:tcp, _, message},
+                  %__MODULE__{socket: _socket, transport: _transport, peer_name: peername} = state) do
     Logger.debug(fn ->
-      "Received new message from peer #{peername}: #{inspect(message)}. Echoing it back"
+      "Received new message from peer #{peername}: #{inspect(message)}"
     end)
 
-    # Sends the message back
-    transport.send(socket, message)
+   with {:ok, db} <- Meshington.Parse.input(message),
+        :ok <- Meshington.Database.join(db) do
+    Logger.debug(fn -> "Received valid state from peer #{peername}: merged it" end)
+   else
+    unexpected ->
+      Logger.warn(fn ->
+        "Received unknown message from peer #{peername}: #{inspect(unexpected)}. Ignoring it."
+      end)
+   end
 
-    {:noreply, state}
+   {:noreply, state}
   end
+
+  # def handle_info(
+  #       {:tcp, _, message},
+  #       %__MODULE__{socket: socket, transport: transport, peer_name: peername} = state
+  #     ) do
+  #   Logger.warn(fn ->
+  #     "Received unknown message format from peer #{peername}: #{inspect(message)}. Ignoring it."
+  #   end)
+
+  #   # Sends the message back
+  #   transport.send(socket, message)
+
+  #   {:noreply, state}
+  # end
 
   def handle_info({:tcp_closed, _}, %__MODULE__{peer_name: peername} = state) do
     Logger.info(fn ->

@@ -30,6 +30,42 @@ Use flow:
 - UUID: https://github.com/zyro/elixir-uuid
 - Inspiration: https://docs.syncthing.net/dev/device-ids.html#device-ids
 - CRDTs: https://github.com/asonge/loom , https://github.com/SyncFree/antidote_crdt , https://github.com/lasp-lang/types
+- RLPx: https://github.com/ethereum/devp2p/blob/master/rlpx.md
+- https://en.wikibooks.org/wiki/The_World_of_Peer-to-Peer_(P2P)/Building_a_P2P_System#Building_a_P2P_System
+- http://www.zeroconf.org/
+
+## Dev usage
+
+```elixir
+# Add secret locally
+myid = Meshington.Identity.new("first")
+secret = Meshington.Secret.new("mysecret", "http://google.com", "user", "pass")
+:ok = Meshington.Database.add(myid, secret)
+Meshington.Database.list()
+
+# Connect to "peer" (ourselves)
+{:ok, client} = Meshington.Net.Client.connect("tcp://localhost:3511")
+
+# Simulate that some other peer has secrets they want to sync with us
+otherid = Meshington.Identity.new("other")
+secret2 = Meshington.Secret.new("othersecret", "http://example.com", "user2", "pass2")
+other_db = %Meshington.Database{secrets: Loom.AWORSet.new() |> Loom.AWORSet.add(otherid, secret2)}
+Meshington.Net.Client.send_state(client, other_db)
+
+# Show the result
+# :sys.get_state(Meshington.Database)
+Meshington.Database.list()
+```
+
+## TODO
+
+- [ ] v0: Keep secrets state in memory
+- [ ] v0: Communication protocol. Could start with elixir structs serialized with `:erlang.term_to_binary/1`.
+- [ ] v0: Decide network topology (fully connected, line, bus...). Since only trusted peers will be connected the network will usually be small (10s of peers).
+- [ ] v0: Implement identifier scheme for peers
+- [ ] v1: Make sure secrets state is persisted
+- [ ] v1: Security. Only establish/accept connections to trusted peers. This is obviously essential.
+- [ ] v2: Node tracker / bootstrap server: A service that can act as a centralized directory of available nodes. I would really like to have something extremely simple for this. Important for usability, but low prio for now. How should this work? Needs to be optional, and be easily replaced with homegrown solutions.
 
 ---
 
@@ -38,16 +74,7 @@ To start your Phoenix server:
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
   * Install Node.js dependencies with `cd assets && npm install`
-  * Start Phoenix endpoint with `mix phx.server`
+  * Start Phoenix endpoint with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix

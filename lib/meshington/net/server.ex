@@ -24,7 +24,7 @@ defmodule Meshington.Net.Server do
   def init([port: port] = opts) do
     {:ok, pid} = :ranch.start_listener(__MODULE__, 10, :ranch_tcp, opts, Protocol, []) # ranch_ssl
 
-    Logger.info(fn -> "Listening for connections on port #{port}" end)
+    Logger.info(fn -> "Listening for Meshington peer connections on port #{port}" end)
 
     {:ok, pid}
   end
