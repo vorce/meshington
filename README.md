@@ -63,6 +63,7 @@ Meshington.Database.list()
 - [ ] v0: Communication protocol. Could start with elixir structs serialized with `:erlang.term_to_binary/1`.
 - [ ] v0: Decide network topology (fully connected, line, bus...). Since only trusted peers will be connected the network will usually be small (10s of peers).
 - [ ] v0: Implement identifier scheme for peers
+- [ ] v0: Basic web UI with CRUD for searches (and peer management?)
 - [ ] v1: Make sure secrets state is persisted
 - [ ] v1: Security. Only establish/accept connections to trusted peers. This is obviously essential.
 - [ ] v2: Node tracker / bootstrap server: A service that can act as a centralized directory of available nodes. I would really like to have something extremely simple for this. Important for usability, but low prio for now. How should this work? Needs to be optional, and be easily replaced with homegrown solutions.
