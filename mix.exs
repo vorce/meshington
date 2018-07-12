@@ -42,7 +42,8 @@ defmodule Meshington.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:socket, "~> 0.3"},
-      {:loom, git: "https://github.com/asonge/loom", branch: "master"}
+      {:loom, git: "https://github.com/asonge/loom", branch: "master"},
+      {:ecto, "~> 2.2"}
     ]
   end
 
