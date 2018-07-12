@@ -2,6 +2,7 @@ defmodule Meshington.Secret do
   @moduledoc """
   Represent a single secret entry for one user
   """
+  @derive {Phoenix.Param, key: :name}
 
   defstruct name: "",
             url: "",

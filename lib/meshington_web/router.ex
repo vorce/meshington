@@ -16,7 +16,12 @@ defmodule MeshingtonWeb.Router do
   scope "/", MeshingtonWeb do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    resources("/secrets", SecretController)
+
+    # get "/", SecretController, :index
+    # get "/secrets/:secret_name", SecretController, :edit
+    # put "/secrets/:secret_name", SecretController, :update
+    # delete "/secrets/:secret_name", SecretController, :delete
   end
 
   # Other scopes may use custom stacks.

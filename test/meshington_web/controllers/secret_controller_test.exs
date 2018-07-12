@@ -1,4 +1,4 @@
-defmodule MeshingtonWeb.PageControllerTest do
+defmodule MeshingtonWeb.SecretControllerTest do
   use MeshingtonWeb.ConnCase
 
   test "GET /", %{conn: conn} do

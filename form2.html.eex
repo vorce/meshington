@@ -1,0 +1,35 @@
+<%= form_for @conn, @action, [method: "put", as: :secret], fn f -> %>
+  <div class="form-group">
+    <%= label f, :name, "Name", class: "control-label" %>
+    <%= text_input f, :name, class: "form-control", value: @secret.name %>
+    <%= error_tag f, :name %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :url, "URL", class: "control-label" %>
+    <%= text_input f, :url, class: "form-control", value: @secret.url %>
+    <%= error_tag f, :url %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :username, "Username", class: "control-label" %>
+    <%= text_input f, :username, class: "form-control", value: @secret.username %>
+    <%= error_tag f, :username %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :password, "Password", class: "control-label" %>
+    <%= text_input f, :password, class: "form-control", value: @secret.password %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :notes, "Notes", class: "control-label" %>
+    <%= text_input f, :notes, class: "form-control", value: @secret.notes %>
+    <%= error_tag f, :notes %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Save", class: "btn btn-primary", method: "put" %>
+  </div>
+<% end %>
