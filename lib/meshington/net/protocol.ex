@@ -55,8 +55,9 @@ defmodule Meshington.Net.Protocol do
     end)
 
    with {:ok, db} <- Meshington.Parse.input(message),
-        :ok <- Meshington.Database.join(db) do
+        :ok <- Meshington.PeerSync.join(db) do
     Logger.debug(fn -> "Received valid state from peer #{peername}: merged it" end)
+    Meshington.Vault.sync()
    else
     unexpected ->
       Logger.warn(fn ->

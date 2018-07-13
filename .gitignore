@@ -18,6 +18,9 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
+# Data from local db
+/priv/data/mnesia/
+
 # Files matching config/*.secret.exs pattern contain sensitive
 # data and you should not commit them into version control.
 #
