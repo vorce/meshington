@@ -1,11 +1,12 @@
-defmodule Meshington.PeerSync do
+defmodule Meshington.Truth do
   @moduledoc """
   """
   alias Meshington.Identity
   alias Meshington.Vault.Secret
   alias Meshington.SyncSecret
-
   alias Loom.AWORSet
+
+  # import Ecto.Query
 
   require Logger
 
@@ -19,7 +20,15 @@ defmodule Meshington.PeerSync do
   end
 
   def init(nil) do
-    {:ok, %__MODULE__{}}
+    myid = Meshington.Identity.new("MyLocalNode123")
+
+    secrets = Secret
+    |> Meshington.Repo.all()
+    |> Enum.reduce(AWORSet.new(), fn stored_secret, acc ->
+      AWORSet.add(acc, myid, SyncSecret.new(stored_secret))
+    end)
+
+    {:ok, %__MODULE__{secrets: secrets}}
   end
 
   def list() do
@@ -35,6 +44,7 @@ defmodule Meshington.PeerSync do
   end
 
   def remove(%Secret{} = _secret) do
+    :ok
   end
 
   def sync() do

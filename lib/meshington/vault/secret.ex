@@ -20,13 +20,15 @@ defmodule Meshington.Vault.Secret do
     |> validate_required([:name])
   end
 
-  def new(%Meshington.SyncSecret{} = sync_secret) do
+  def new(sync_secret, as \\ :map)
+
+  def new(%Meshington.SyncSecret{} = sync_secret, :map) do
     %{
       name: sync_secret.name,
       username: sync_secret.username,
       password: sync_secret.password,
       url: sync_secret.url,
-      notes: sync_secret.notes
+      notes: sync_secret.notes,
     }
   end
 end

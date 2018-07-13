@@ -5,8 +5,10 @@ defmodule Meshington.Vault do
 
   import Ecto.Query, warn: false
   alias Meshington.Repo
-  alias Meshington.PeerSync
+  alias Meshington.Truth
   alias Meshington.Vault.Secret
+
+  require Logger
 
   @doc """
   Returns the list of secrets.
@@ -19,6 +21,11 @@ defmodule Meshington.Vault do
   """
   def list_secrets do
     Repo.all(Secret)
+    # |> IO.inspect(label: "stored secrets")
+    # Truth.list()
+    # |> Enum.map(fn sync_secret ->
+    #   Secret.new(sync_secret, :struct)
+    # end)
   end
 
   @doc """
@@ -35,18 +42,25 @@ defmodule Meshington.Vault do
       ** (Ecto.NoResultsError)
 
   """
-  def get_secret!(id), do: Repo.get!(Secret, id)
+  def get_secret!(id) do
+    Repo.get!(Secret, id)
+    # Truth.list()
+    # |> Enum.find(fn sync_secret ->
+    #   sync_secret.name == id
+    # end)
+    # |> Secret.new(:struct)
+  end
 
   def sync() do
-    secrets = PeerSync.list()
+    secrets = Truth.list()
     |> Enum.map(fn sync_secret ->
       Secret.new(sync_secret)
     end)
-    |> IO.inspect(label: "secrets to sync to db")
 
     Repo.transaction(fn ->
       with {removed, _} <- from(s in Secret, where: s.id >= 0) |> Repo.delete_all(),
            {inserted, _} <- Repo.insert_all(Secret, secrets) do
+        Logger.info("Synced vault with truth, secrets: #{inserted} (before: #{removed})")
         :ok
       else
         unexpected ->
@@ -71,8 +85,8 @@ defmodule Meshington.Vault do
     myid = Meshington.Identity.new("MyLocalNode123") # TODO this should be generated on startup and saved in db, with a UUID (adn a humanized version of that for display)
     Repo.transaction(fn ->
       with {:ok, secret} <- %Secret{} |> Secret.changeset(attrs) |> Repo.insert(),
-           :ok <- PeerSync.add(myid, secret),
-           :ok <- PeerSync.sync() do
+           :ok <- Truth.add(myid, secret),
+           :ok <- Truth.sync() do
         secret
       else
         {:error, %Ecto.Changeset{} = changeset_error} ->
@@ -96,6 +110,8 @@ defmodule Meshington.Vault do
 
   """
   def update_secret(%Secret{} = secret, attrs) do
+    # TODO: Update Truth
+
     secret
     |> Secret.changeset(attrs)
     |> Repo.update()
@@ -114,7 +130,9 @@ defmodule Meshington.Vault do
 
   """
   def delete_secret(%Secret{} = secret) do
-    Repo.delete(secret)
+    with :ok <- Truth.remove(secret) do
+      Repo.delete(secret)
+    end
   end
 
   @doc """

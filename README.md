@@ -40,7 +40,7 @@ Use flow:
 # Add secret locally
 # Via web UI localhost:4000/secrets or:
 Vault.create_secret(secret_params)
-Meshington.PeerSync.list()
+Meshington.Truth.list()
 
 # Connect to "peer" (ourselves)
 {:ok, client} = Meshington.Net.Client.connect("tcp://localhost:3511")
@@ -48,12 +48,12 @@ Meshington.PeerSync.list()
 # Simulate that some other peer has secrets they want to sync with us
 otherid = Meshington.Identity.new("other")
 secret2 = Meshington.SyncSecret.new("othersecret", "http://example.com", "user2", "pass2")
-other_db = %Meshington.PeerSync{secrets: Loom.AWORSet.new() |> Loom.AWORSet.add(otherid, secret2)}
+other_db = %Meshington.Truth{secrets: Loom.AWORSet.new() |> Loom.AWORSet.add(otherid, secret2)}
 Meshington.Net.Client.send_state(client, other_db)
 
 # Show the result
 # Refresh web UI or:
-Meshington.PeerSync.list()
+Meshington.Truth.list()
 ```
 
 ## TODO

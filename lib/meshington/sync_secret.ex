@@ -19,13 +19,13 @@ defmodule Meshington.SyncSecret do
     }
   end
 
-  def new(%Meshington.Vault.Secret{} = vaul_secret) do
+  def new(%Meshington.Vault.Secret{} = vault_secret) do
     %__MODULE__{
-      name: vaul_secret.name,
-      url: vaul_secret.url,
-      username: vaul_secret.username,
-      password: vaul_secret.password,
-      notes: vaul_secret.notes
+      name: vault_secret.name,
+      url: vault_secret.url,
+      username: vault_secret.username,
+      password: vault_secret.password,
+      notes: vault_secret.notes
     }
   end
 end

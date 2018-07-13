@@ -2,8 +2,6 @@ defmodule Meshington.Net.Client do
   @moduledoc """
   Meshington peer client
   """
-  alias Meshington.Identity
-  alias Meshington.Secret
 
   defstruct socket: nil,
             host: "",
