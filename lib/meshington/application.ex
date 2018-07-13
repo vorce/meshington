@@ -8,7 +8,7 @@ defmodule Meshington.Application do
       # Start the Ecto repository
       supervisor(Meshington.Repo, []),
 
-      worker(Meshington.Database, []),
+      worker(Meshington.PeerSync, []),
 
       # Start the endpoint when the application starts
       supervisor(MeshingtonWeb.Endpoint, []),

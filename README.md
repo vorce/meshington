@@ -38,23 +38,22 @@ Use flow:
 
 ```elixir
 # Add secret locally
-myid = Meshington.Identity.new("first")
-secret = Meshington.Secret.new("mysecret", "http://google.com", "user", "pass")
-:ok = Meshington.Database.add(myid, secret)
-Meshington.Database.list()
+# Via web UI localhost:4000/secrets or:
+Vault.create_secret(secret_params)
+Meshington.PeerSync.list()
 
 # Connect to "peer" (ourselves)
 {:ok, client} = Meshington.Net.Client.connect("tcp://localhost:3511")
 
 # Simulate that some other peer has secrets they want to sync with us
 otherid = Meshington.Identity.new("other")
-secret2 = Meshington.Secret.new("othersecret", "http://example.com", "user2", "pass2")
-other_db = %Meshington.Database{secrets: Loom.AWORSet.new() |> Loom.AWORSet.add(otherid, secret2)}
+secret2 = Meshington.SyncSecret.new("othersecret", "http://example.com", "user2", "pass2")
+other_db = %Meshington.PeerSync{secrets: Loom.AWORSet.new() |> Loom.AWORSet.add(otherid, secret2)}
 Meshington.Net.Client.send_state(client, other_db)
 
 # Show the result
-# :sys.get_state(Meshington.Database)
-Meshington.Database.list()
+# Refresh web UI or:
+Meshington.PeerSync.list()
 ```
 
 ## TODO

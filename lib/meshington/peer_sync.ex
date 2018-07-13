@@ -1,12 +1,13 @@
-defmodule Meshington.Database do
+defmodule Meshington.PeerSync do
   @moduledoc """
-  Keeps local state in memory
   """
   alias Meshington.Identity
-  alias Meshington.Secret
+  alias Meshington.Vault.Secret
+  alias Meshington.SyncSecret
 
   alias Loom.AWORSet
 
+  require Logger
 
   use GenServer
 
@@ -33,7 +34,11 @@ defmodule Meshington.Database do
     GenServer.call(__MODULE__, {:join, db})
   end
 
-  def remove(%Secret{} = secret) do
+  def remove(%Secret{} = _secret) do
+  end
+
+  def sync() do
+    GenServer.cast(__MODULE__, :sync)
   end
 
   def handle_call({:add, id, secret}, _from, %__MODULE__{} = state) do
@@ -48,8 +53,14 @@ defmodule Meshington.Database do
     {:reply, :ok, %__MODULE__{state | secrets: join_secrets(state.secrets, db.secrets)}}
   end
 
+  def handle_cast(:sync, %__MODULE__{} = state) do
+    # Meshington.Net.Client.send_state(client, state)
+    Logger.info("TODO: Send state here to peers")
+    {:noreply, state}
+  end
+
   defp add_to_secrets(%AWORSet{} = secrets, %Identity{} = id, %Secret{} = secret) do
-    AWORSet.add(secrets, id, secret)
+    AWORSet.add(secrets, id, SyncSecret.new(secret))
   end
 
   defp list_secrets(%AWORSet{} = secrets) do

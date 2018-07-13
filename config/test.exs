@@ -11,9 +11,12 @@ config :logger, level: :warn
 
 # Configure your database
 config :meshington, Meshington.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "meshington_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  adapter: EctoMnesia.Adapter
+#   adapter: Ecto.Adapters.Postgres,
+#   username: "postgres",
+#   password: "postgres",
+#   database: "meshington_test",
+#   hostname: "localhost",
+#   pool: Ecto.Adapters.SQL.Sandbox
+
+config :mnesia, :dir, 'priv/data/mnesia'

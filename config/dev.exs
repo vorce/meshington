@@ -47,9 +47,11 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :meshington, Meshington.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "meshington",
-  password: "meshington",
-  database: "meshington",
-  hostname: "localhost",
-  pool_size: 10
+  adapter: EctoMnesia.Adapter
+  # username: "meshington",
+  # password: "meshington",
+  # database: "meshington",
+  # hostname: "localhost",
+  # pool_size: 10
+
+config :mnesia, :dir, 'priv/data/mnesia'

@@ -20,7 +20,7 @@ defmodule Meshington.Mixfile do
   def application do
     [
       mod: {Meshington.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ecto_mnesia]
     ]
   end
 
@@ -35,8 +35,10 @@ defmodule Meshington.Mixfile do
     [
       {:phoenix, "~> 1.3.0"},
       {:phoenix_pubsub, "~> 1.0"},
+      {:ecto, "~> 2.1.0", override: true},
       {:phoenix_ecto, "~> 3.2"},
-      {:postgrex, ">= 0.0.0"},
+      {:ecto_mnesia, "~> 0.9"},
+      # {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
@@ -56,7 +58,7 @@ defmodule Meshington.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      #test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
